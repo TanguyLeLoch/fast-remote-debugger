@@ -1,5 +1,6 @@
 package com.natu.remotedebugger;
 
+import com.natu.remotedebugger.common.exception.TechnicalException;
 import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
 import com.sun.jdi.connect.Connector;
@@ -13,12 +14,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class SocketConnector {
+public class RemoteDebuggerConnector {
     private final AttachingConnector connector;
 
     private VirtualMachine vm = null;
 
-    public SocketConnector() {
+    public RemoteDebuggerConnector() {
         AttachingConnector connector = null;
         for (AttachingConnector c : Bootstrap.virtualMachineManager()
                 .attachingConnectors()) {
@@ -43,7 +44,8 @@ public class SocketConnector {
             arguments.get("port").setValue(String.valueOf(port));
             vm = connector.attach(arguments);
         } catch (IllegalConnectorArgumentsException | IOException e) {
-            throw new RuntimeException(e);
+            throw new TechnicalException("Could not connect to remote debugger",
+                    e);
         }
 
     }

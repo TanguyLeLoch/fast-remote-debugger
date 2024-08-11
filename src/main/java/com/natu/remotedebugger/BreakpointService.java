@@ -7,10 +7,10 @@ import java.util.*;
 
 @Service
 public class BreakpointService {
-    SocketConnector connector;
+    RemoteDebuggerConnector connector;
     boolean isConnected = false;
 
-    public BreakpointService(SocketConnector connector) {
+    public BreakpointService(RemoteDebuggerConnector connector) {
         this.connector = connector;
     }
 
