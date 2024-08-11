@@ -1,6 +1,5 @@
 package com.natu.remotedebugger;
 
-import com.sun.jdi.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -24,9 +23,8 @@ public class BreakpointController {
     }
 
     @GetMapping("all")
-    public Map<String, Value> getBreakpoints() {
-        breakpointService.connect("localhost", 5005);
-        return breakpointService.getAllBreakpoints();
+    public Map<String, String> getBreakpoints() {
+        return null;
     }
 
 
