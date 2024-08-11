@@ -89,4 +89,16 @@ public class RemoteDebuggerConnector {
     public Map<String, Value> getAllBreakpoints() {
         return null;
     }
+
+    public void disconnect() {
+        if (vm == null) {
+            throw new RuntimeException("Connect using connect() first");
+        }
+        vm.dispose();
+        vm = null;
+    }
+
+    public boolean isConnected() {
+        return vm != null;
+    }
 }

@@ -15,4 +15,12 @@ public class ConnectionService {
     public void connect(String hostname, int port) {
         connector.connect(hostname, port);
     }
+
+    public void disconnect() {
+        connector.disconnect();
+    }
+
+    public boolean isConnected() {
+        return connector.isConnected();
+    }
 }

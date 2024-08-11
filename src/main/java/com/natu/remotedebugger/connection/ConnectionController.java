@@ -1,8 +1,6 @@
 package com.natu.remotedebugger.connection;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/connections")
@@ -14,11 +12,22 @@ public class ConnectionController {
         this.connectionService = connectionService;
     }
 
-    @RequestMapping("/connect")
+    @PostMapping("/connect")
     public String connect(
             @RequestParam("hostname") String hostname,
             @RequestParam("port") int port) {
         connectionService.connect(hostname, port);
         return "ok";
+    }
+
+    @PostMapping("/disconnect")
+    public String disconnect() {
+        connectionService.disconnect();
+        return "ok";
+    }
+
+    @GetMapping("/isConnected")
+    public boolean isConnected() {
+        return connectionService.isConnected();
     }
 }
