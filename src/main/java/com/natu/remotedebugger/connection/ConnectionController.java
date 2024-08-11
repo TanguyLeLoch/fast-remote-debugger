@@ -12,22 +12,23 @@ public class ConnectionController {
         this.connectionService = connectionService;
     }
 
-    @PostMapping("/connect")
-    public String connect(
+    @PostMapping(value = "/connect")
+    public void connect(
             @RequestParam("hostname") String hostname,
             @RequestParam("port") int port) {
         connectionService.connect(hostname, port);
-        return "ok";
     }
 
-    @PostMapping("/disconnect")
-    public String disconnect() {
+    @PostMapping(value = "/disconnect")
+    public void disconnect() {
         connectionService.disconnect();
-        return "ok";
     }
 
-    @GetMapping("/isConnected")
-    public boolean isConnected() {
-        return connectionService.isConnected();
+    @GetMapping(
+            value = "/isConnected",
+            produces = "application/json"
+    )
+    public SuccessResponse isConnected() {
+        return new SuccessResponse(connectionService.isConnected());
     }
 }

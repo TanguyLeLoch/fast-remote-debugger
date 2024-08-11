@@ -22,5 +22,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(NoContentException.class)
+    public ResponseEntity<ExceptionResponse> handleFunctionalException(
+            NoContentException exception) {
+        ExceptionResponse response = new ExceptionResponse(
+                exception.getMessage());
+        LOGGER.error(exception.getMessage(), exception);
+        return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+    }
+
 
 }

@@ -1,5 +1,8 @@
-package com.natu.remotedebugger;
+package com.natu.remotedebugger.breakpoint;
 
+import com.natu.remotedebugger.RemoteDebuggerConnector;
+import com.natu.remotedebugger.common.exception.NoContentException;
+import com.natu.remotedebugger.common.exception.TechnicalException;
 import com.sun.jdi.*;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +50,7 @@ public class BreakpointService {
                     RuntimeException::new);
 
             StackFrame frame = thread.frames().get(0);
-            Location location = frame.location();
-            System.out.println("At " + location.method()
-                    .name() + " in " + location.sourceName() + " at line " + location.lineNumber());
+            printLocation(frame);
 
             // Print local variables
 
@@ -75,7 +76,46 @@ public class BreakpointService {
 
     }
 
-    public Map<String, Value> getAllBreakpoints() {
+    public List<Breakpoint> getAllBreakpoints() {
         return connector.getAllBreakpoints();
+    }
+
+    public BreakpointHit getHit() {
+
+        Optional<ThreadReference> threadOpt = getBlockedThread();
+        if (threadOpt.isEmpty()) {
+            throw new NoContentException("No breakpoint hit");
+        }
+        ThreadReference thread = threadOpt.get();
+
+        Map<String, String> localVariable = new HashMap<>();
+        var frames = getFrames(thread);
+        var frame = frames.get(0);
+        printLocation(frame);
+
+        for (LocalVariable var : getVisibleVariables(frame)) {
+            localVariable.put(var.name(), frame.getValue(var).toString());
+        }
+
+        return new BreakpointHit(frame.location(), localVariable);
+
+    }
+
+    private static void printLocation(StackFrame frame) {
+        Location location = frame.location();
+        try {
+            System.out.println("At " + location.method()
+                    .name() + " in " + location.sourceName() + " at line " + location.lineNumber());
+        } catch (AbsentInformationException e) {
+            throw new TechnicalException("unable to get location", e);
+        }
+    }
+
+    private static List<StackFrame> getFrames(ThreadReference thread) {
+        try {
+            return thread.frames();
+        } catch (IncompatibleThreadStateException e) {
+            throw new TechnicalException("unable to get frames", e);
+        }
     }
 }

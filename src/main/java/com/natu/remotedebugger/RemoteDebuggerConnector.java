@@ -1,5 +1,6 @@
 package com.natu.remotedebugger;
 
+import com.natu.remotedebugger.breakpoint.Breakpoint;
 import com.natu.remotedebugger.common.exception.TechnicalException;
 import com.sun.jdi.*;
 import com.sun.jdi.connect.AttachingConnector;
@@ -10,6 +11,7 @@ import com.sun.jdi.request.EventRequestManager;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -86,13 +88,32 @@ public class RemoteDebuggerConnector {
 
     }
 
-    public Map<String, Value> getAllBreakpoints() {
-        return null;
+    public List<Breakpoint> getAllBreakpoints() {
+        if (vm == null) {
+            throw new RuntimeException("Connect using connect() first");
+        }
+        List<Breakpoint> breakpoints = new ArrayList<>();
+        EventRequestManager erm = vm.eventRequestManager();
+
+        for (BreakpointRequest bpRequest : erm.breakpointRequests()) {
+            Location location = bpRequest.location();
+
+            String fileReference;
+            try {
+                fileReference = location.sourceName();
+            } catch (AbsentInformationException e) {
+                fileReference = "Unknown";
+            }
+            int lineNumber = location.lineNumber();
+            breakpoints.add(new Breakpoint(fileReference, lineNumber));
+        }
+
+        return breakpoints;
     }
 
     public void disconnect() {
         if (vm == null) {
-            throw new RuntimeException("Connect using connect() first");
+            return;
         }
         vm.dispose();
         vm = null;
