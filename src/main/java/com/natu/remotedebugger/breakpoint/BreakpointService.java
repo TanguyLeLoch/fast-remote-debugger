@@ -43,8 +43,8 @@ public class BreakpointService {
         connector.setBreakpoint(fileReference, lineNumber);
     }
 
-    public Map<String, String> getLocalVariable() {
-        Map<String, String> localVariable = new HashMap<>();
+    public Map<String, Variable> getLocalVariable() {
+        Map<String, Variable> localVariable = new HashMap<>();
         try {
             ThreadReference thread = getBlockedThread().orElseThrow(
                     RuntimeException::new);
@@ -55,9 +55,8 @@ public class BreakpointService {
             // Print local variables
 
             for (LocalVariable var : getVisibleVariables(frame)) {
-                System.out.println(
-                        var.name() + " = " + frame.getValue(var));
-                localVariable.put(var.name(), frame.getValue(var).toString());
+                Variable v = new Variable(frame, var);
+                localVariable.put(v.getName(), v);
             }
 
 
@@ -88,14 +87,11 @@ public class BreakpointService {
         }
         ThreadReference thread = threadOpt.get();
 
-        Map<String, String> localVariable = new HashMap<>();
         var frames = getFrames(thread);
         var frame = frames.get(0);
         printLocation(frame);
 
-        for (LocalVariable var : getVisibleVariables(frame)) {
-            localVariable.put(var.name(), frame.getValue(var).toString());
-        }
+        Map<String, Variable> localVariable = getLocalVariable();
 
         return new BreakpointHit(frame.location(), localVariable);
 

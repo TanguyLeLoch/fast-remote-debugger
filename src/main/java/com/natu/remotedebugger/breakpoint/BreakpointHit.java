@@ -7,9 +7,10 @@ import java.util.Map;
 
 public class BreakpointHit {
     private final Location location;
-    private final Map<String, String> localVariable;
+    private final Map<String, Variable> localVariable;
 
-    public BreakpointHit(Location location, Map<String, String> localVariable) {
+    public BreakpointHit(Location location,
+            Map<String, Variable> localVariable) {
         this.location = location;
         this.localVariable = localVariable;
     }
@@ -30,7 +31,7 @@ public class BreakpointHit {
         return location.method().name();
     }
 
-    public Map<String, String> getLocalVariable() {
+    public Map<String, Variable> getLocalVariable() {
         return localVariable;
     }
 

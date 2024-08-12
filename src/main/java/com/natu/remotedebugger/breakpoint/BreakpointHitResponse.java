@@ -22,7 +22,7 @@ public class BreakpointHitResponse {
     }
 
 
-    public Map<String, String> getLocalVariable() {
+    public Map<String, Variable> getLocalVariable() {
         return hit.getLocalVariable();
     }
 
