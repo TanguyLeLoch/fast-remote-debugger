@@ -6,7 +6,9 @@ import com.natu.remotedebugger.common.exception.TechnicalException;
 import com.sun.jdi.*;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BreakpointService {
@@ -43,20 +45,16 @@ public class BreakpointService {
         connector.setBreakpoint(fileReference, lineNumber);
     }
 
-    public Map<String, Variable> getLocalVariable() {
-        Map<String, Variable> localVariable = new HashMap<>();
+    public List<Variable> getLocalVariable() {
+        List<Variable> localVariable = new ArrayList<>();
         try {
             ThreadReference thread = getBlockedThread().orElseThrow(
                     RuntimeException::new);
 
             StackFrame frame = thread.frames().get(0);
-            printLocation(frame);
-
-            // Print local variables
-
             for (LocalVariable var : getVisibleVariables(frame)) {
-                Variable v = new Variable(frame, var);
-                localVariable.put(v.getName(), v);
+                Variable v = new TopLevelVariable(frame, var);
+                localVariable.add(v);
             }
 
 
@@ -89,9 +87,8 @@ public class BreakpointService {
 
         var frames = getFrames(thread);
         var frame = frames.get(0);
-        printLocation(frame);
 
-        Map<String, Variable> localVariable = getLocalVariable();
+        List<Variable> localVariable = getLocalVariable();
 
         return new BreakpointHit(frame.location(), localVariable);
 

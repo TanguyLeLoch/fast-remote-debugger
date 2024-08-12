@@ -1,29 +1,35 @@
 package com.natu.remotedebugger.breakpoint;
 
-import java.util.Map;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.Collections;
+import java.util.List;
 
 public class BreakpointHitResponse {
-    private BreakpointHit hit;
+    private final BreakpointHit hit;
 
     public BreakpointHitResponse(BreakpointHit hit) {
         this.hit = hit;
     }
 
+    @NotNull
     public String getSourceName() {
         return hit.getSourceName();
     }
 
+    @NotNull
     public int getLineNumber() {
         return hit.getLineNumber();
     }
 
+    @NotNull
     public String getMethodName() {
         return hit.getMethodName();
     }
 
 
-    public Map<String, Variable> getLocalVariable() {
-        return hit.getLocalVariable();
+    @NotNull
+    public List<Variable> getLocalVariable() {
+        return Collections.unmodifiableList(hit.getLocalVariable());
     }
-
 }

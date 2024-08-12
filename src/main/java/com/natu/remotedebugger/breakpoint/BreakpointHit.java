@@ -3,14 +3,15 @@ package com.natu.remotedebugger.breakpoint;
 import com.sun.jdi.AbsentInformationException;
 import com.sun.jdi.Location;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
 
 public class BreakpointHit {
     private final Location location;
-    private final Map<String, Variable> localVariable;
+    private final List<Variable> localVariable;
 
     public BreakpointHit(Location location,
-            Map<String, Variable> localVariable) {
+            List<Variable> localVariable) {
         this.location = location;
         this.localVariable = localVariable;
     }
@@ -31,9 +32,7 @@ public class BreakpointHit {
         return location.method().name();
     }
 
-    public Map<String, Variable> getLocalVariable() {
-        return localVariable;
+    public List<Variable> getLocalVariable() {
+        return Collections.unmodifiableList(localVariable);
     }
-
-
 }

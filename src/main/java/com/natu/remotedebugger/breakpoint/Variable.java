@@ -1,55 +1,44 @@
 package com.natu.remotedebugger.breakpoint;
 
-import com.sun.jdi.Field;
-import com.sun.jdi.LocalVariable;
-import com.sun.jdi.ObjectReference;
-import com.sun.jdi.StackFrame;
+import jakarta.validation.constraints.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public abstract class Variable {
 
-public class Variable {
+
+    protected final Variables fields;
     private final String name;
     private final String type;
     private final String value;
-    //    private final String toString;
-    private final Map<String, FieldVariable> fields;
 
-    public Variable(StackFrame frame, LocalVariable var) {
-        this.name = var.name();
-        this.fields = new HashMap<>();
-        if (frame.getValue(var) instanceof ObjectReference objectReference) {
-            this.value = objectReference.referenceType().name();
-            this.type = objectReference.referenceType().name();
-            List<Field> fields = objectReference.referenceType().fields();
-            for (Field field : fields) {
-                FieldVariable fieldVariable = new FieldVariable(objectReference,
-                        field);
-                this.fields.put(field.name(), fieldVariable);
-            }
-        } else {
-            this.value = frame.getValue(var).toString();
-            this.type = var.typeName();
-        }
-
+    Variable(String name, String type, String value) {
+        this.name = name;
+        this.type = type;
+        this.value = value;
+        this.fields = new Variables();
     }
 
+    abstract void initFields();
 
+
+    @NotNull
     public String getName() {
         return name;
     }
 
+    @NotNull
     public String getType() {
         return type;
     }
 
+    @NotNull
     public String getValue() {
         return value;
     }
 
-    public Map<String, FieldVariable> getFields() {
+    @NotNull
+    public Variables getFields() {
         return fields;
     }
 }
+
 
