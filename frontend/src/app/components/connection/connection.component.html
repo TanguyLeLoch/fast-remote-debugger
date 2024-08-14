@@ -1,0 +1,26 @@
+<ng-container *ngIf="isConnected; else notConnected">
+  <span>Connected</span>
+  <button type="button" (click)="onDisconnect()">Disconnect</button>
+  <br>
+  <app-breakpoint-list></app-breakpoint-list>
+  <br>
+  <app-activity></app-activity>
+
+
+</ng-container>
+<ng-template #notConnected>
+  <span>Not connected</span>
+
+  <form [formGroup]="connectForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="host">Host</label>
+      <input id="host" formControlName="host" type="text"/>
+    </div>
+    <div>
+      <label for="port">Port</label>
+      <input id="port" formControlName="port" type="number"/>
+    </div>
+    <button type="submit">Connect</button>
+  </form>
+</ng-template>
+

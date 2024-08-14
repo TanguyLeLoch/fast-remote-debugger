@@ -1,0 +1,9 @@
+<h1>Activity</h1>
+
+<span>Stoped at: {{ hit.lineNumber }} in {{ hit.methodName }} of {{ hit.sourceName }}</span>
+<div class="variables">
+
+  <span class="variable" *ngFor="let entries of hit.localVariable">
+    <app-variable-item [variable]="entries"></app-variable-item>
+  </span>
+</div>

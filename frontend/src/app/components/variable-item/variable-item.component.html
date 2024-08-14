@@ -1,0 +1,14 @@
+<div class="variable-item">
+  <div class="header">
+    <span> {{ variable.name }} </span>
+    <span class="type"> : {{ type }} </span>
+    <span class="value"> : {{ variable.value }} </span>
+    <button class="unfold" (click)="unfold()">v</button>
+  </div>
+  <div class="content" [ngClass]="{'folded': isFolded}">
+    <span class="variable" *ngFor="let entries of variable.fields">
+    <app-variable-item [variable]="entries"></app-variable-item>
+  </span>
+
+  </div>
+</div>

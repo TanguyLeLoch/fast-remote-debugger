@@ -1,0 +1,15 @@
+<h1>Breakpoint List</h1>
+<form [formGroup]="addBreakpointForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="fileReference">File Reference</label>
+    <input id="fileReference" formControlName="fileReference" type="text"/>
+  </div>
+  <div>
+    <label for="lineNumber">Line Number</label>
+    <input id="lineNumber" formControlName="lineNumber" type="number"/>
+  </div>
+  <button type="submit">Add Breakpoint</button>
+</form>
+<div *ngFor="let breakpoint of breakpoints">
+  {{ breakpoint.fileReference }} {{ breakpoint.lineNumber }}
+</div>
